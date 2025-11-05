@@ -7,10 +7,19 @@ services:
       - /opt/keycloak/bin/kc.sh
       - start-dev
       - >-
-        --spi-events-store-provider=ext-event-aws-firehose-store
-        --spi-events-store-ext-event-aws-firehose-store-firehose-enabled=true
-        --spi-events-store-ext-event-aws-firehose-store-aws-profile=phasetwo-terraform
-        --spi-events-store-ext-event-aws-firehose-store-aws-region=us-west-2
+        --spi-events-store-provider=aws-firehose-store
+        --spi-events-store-aws-firehose-store-firehose-enabled=true
+        --spi-events-store-aws-firehose-store-firehose-user-events-stream=keycloak-events-user-events
+        --spi-events-store-aws-firehose-store-firehose-admin-events-stream=keycloak-events-admin-events
+        --spi-events-store-aws-firehose-store-athena-database=keycloak-events
+        --spi-events-store-aws-firehose-store-athena-user-events-table=keycloak-events-user-events
+        --spi-events-store-aws-firehose-store-athena-admin-events-table=keycloak-events-admin-events
+        --spi-events-store-aws-firehose-store-athena-work-group=
+        --spi-events-store-aws-firehose-store-athena-output-location=
+        --spi-events-store-aws-firehose-store-athena-query-poll-interval-millis=1000
+        --spi-events-store-aws-firehose-store-athena-query-max-attempts=60
+        --spi-events-store-aws-firehose-store-aws-profile=
+        --spi-events-store-aws-firehose-store-aws-region=
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin

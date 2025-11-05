@@ -18,7 +18,7 @@ import software.amazon.awssdk.services.firehose.model.PutRecordRequest;
 import software.amazon.awssdk.services.firehose.model.Record;
 
 @JBossLog
-public class KinesisFirehoseEventStoreProvider implements EventStoreProvider {
+public class FirehoseEventStoreProvider implements EventStoreProvider {
 
   private final EventListenerTransaction tx;
   private final FirehoseClient firehose;
@@ -33,7 +33,7 @@ public class KinesisFirehoseEventStoreProvider implements EventStoreProvider {
   private final long queryPollIntervalMillis;
   private final int queryMaxAttempts;
 
-  public KinesisFirehoseEventStoreProvider(
+  public FirehoseEventStoreProvider(
       KeycloakSession session,
       FirehoseClient firehose,
       String firehoseUserEventsStream,

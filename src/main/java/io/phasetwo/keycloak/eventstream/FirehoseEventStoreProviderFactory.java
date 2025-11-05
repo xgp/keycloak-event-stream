@@ -19,10 +19,10 @@ import software.amazon.awssdk.services.firehose.FirehoseClientBuilder;
 
 @JBossLog
 @AutoService(EventStoreProviderFactory.class)
-public class KinesisFirehoseEventStoreProviderFactory
+public class FirehoseEventStoreProviderFactory
     implements EventStoreProviderFactory, EnvironmentDependentProviderFactory {
 
-  public static final String PROVIDER_ID = "ext-event-aws-firehose-store";
+  public static final String PROVIDER_ID = "aws-firehose-store";
 
   private FirehoseClient firehose;
   private AthenaClient athena;
@@ -43,7 +43,7 @@ public class KinesisFirehoseEventStoreProviderFactory
 
   @Override
   public EventStoreProvider create(KeycloakSession session) {
-    return new KinesisFirehoseEventStoreProvider(
+    return new FirehoseEventStoreProvider(
         session,
         firehose,
         firehoseUserEventsStream,
@@ -68,13 +68,13 @@ public class KinesisFirehoseEventStoreProviderFactory
     this.athenaUserEventsTable = scope.get("athenaUserEventsTable", "keycloak-events-user-events");
     this.athenaAdminEventsTable =
         scope.get("athenaAdminEventsTable", "keycloak-events-admin-events");
-    this.athenaWorkGroup = scope.get("athenaWorkGroup");
-    this.athenaOutputLocation = scope.get("athenaOutputLocation");
+    this.athenaWorkGroup = nullIfBlank(scope.get("athenaWorkGroup"));
+    this.athenaOutputLocation = nullIfBlank(scope.get("athenaOutputLocation"));
     this.athenaQueryPollIntervalMillis = resolveLong(scope, "athenaQueryPollIntervalMillis", 1000L);
     this.athenaQueryMaxAttempts = (int) resolveLong(scope, "athenaQueryMaxAttempts", 60L);
 
-    String profile = scope.get("awsProfile");
-    String region = scope.get("awsRegion");
+    String profile = nullIfBlank(scope.get("awsProfile"));
+    String region = nullIfBlank(scope.get("awsRegion"));
 
     AwsCredentialsProvider credentialsProvider =
         profile != null
@@ -139,5 +139,9 @@ public class KinesisFirehoseEventStoreProviderFactory
       log.warnf("Invalid numeric configuration for %s: %s", key, value);
       return defaultValue;
     }
+  }
+
+  private String nullIfBlank(String value) {
+    return value == null || value.isBlank() ? null : value;
   }
 }
