@@ -1,5 +1,6 @@
 *~
 dependency-reduced-pom.xml
+target/
 
 terraform/.terraform*
 terraform/terraform.tfstate*
